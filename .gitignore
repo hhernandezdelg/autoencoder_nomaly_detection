@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual env
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS/editor
+.DS_Store
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Large/generated outputs (adjust per repo)
+data/
+output/
+outputs*/
+renders*/
+*.ckpt
+*.pth
+*.pt
+*.npz
+*.ply
+
