@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import math
-import random
 from pathlib import Path
 from typing import Tuple
 
@@ -106,10 +105,9 @@ def build_dataloaders(
 def default_transforms():
     transform_train = transforms.Compose(
         [
-            transforms.RandomAffine(degrees=10, translate=(0.1, 0.1), scale=(0.9, 1.1)),
             transforms.Resize((28, 28)),
             transforms.ToTensor(),
-            transforms.Grayscale(num_output_channels=1),
+            # transforms.Grayscale(num_output_channels=1),
         ]
     )
 
@@ -117,7 +115,7 @@ def default_transforms():
         [
             transforms.Resize((28, 28)),
             transforms.ToTensor(),
-            transforms.Grayscale(num_output_channels=1),
+            # transforms.Grayscale(num_output_channels=1),
         ]
     )
     return transform_train, transform_val
@@ -162,37 +160,3 @@ def make_corrupted_subset(
     clean_ds = TensorDataset(images, labels)
     corrupt_ds = TensorDataset(corrupted, labels)
     return clean_ds, corrupt_ds
-
-
-# Data loader for corrupted MNIST from disk (user-provided)
-DATA_PATH = "data/corruptmnist"
-
-
-def corrupt_mnist() -> tuple[torch.utils.data.Dataset, torch.utils.data.Dataset]:
-    """Return train and test dataloaders for corrupt MNIST."""
-    train_images, train_target = [], []
-    for i in range(6):
-        train_images.append(torch.load(f"{DATA_PATH}/train_images_{i}.pt"))
-        train_target.append(torch.load(f"{DATA_PATH}/train_target_{i}.pt"))
-    train_images = torch.cat(train_images)
-    train_target = torch.cat(train_target)
-
-    test_images: torch.Tensor = torch.load(f"{DATA_PATH}/test_images.pt")
-    test_target: torch.Tensor = torch.load(f"{DATA_PATH}/test_target.pt")
-
-    train_images = train_images.unsqueeze(1).float()
-    test_images = test_images.unsqueeze(1).float()
-    train_target = train_target.long()
-    test_target = test_target.long()
-
-    train_set = TensorDataset(train_images, train_target)
-    test_set = TensorDataset(test_images, test_target)
-
-    return train_set, test_set
-
-
-def corrupt_mnist_placeholder():  # NEW ADDITION
-    """Return random tensors (placeholder version of corrupt_mnist)."""
-    train = torch.randn(50000, 784)
-    test = torch.randn(10000, 784)
-    return train, test

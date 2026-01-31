@@ -22,14 +22,16 @@ def show_image_and_target(images: torch.Tensor, target: torch.Tensor) -> None:
     plt.show()
 
 
-def _save_or_show(fig, save_path: str | Path | None):  # NEW ADDITION
-    if save_path is None:
+def _save_or_show(fig, save_path: str | Path | None, show: bool = True):
+    if save_path is not None:
+        save_path = Path(save_path)
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(save_path, bbox_inches="tight")
+
+    if show:
         plt.show()
-        return
-    save_path = Path(save_path)
-    save_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(save_path, bbox_inches="tight")
     plt.close(fig)
+
 
 
 def plot_original_corrupted(clean_ds, corrupt_ds, n=4, save_path: str | Path | None = None):  # NEW ADDITION
@@ -44,10 +46,10 @@ def plot_original_corrupted(clean_ds, corrupt_ds, n=4, save_path: str | Path | N
         axes[1, i].imshow(corr_img.squeeze(), cmap="gray")
         axes[1, i].set_title("Corrupted")
         axes[1, i].axis("off")
-    _save_or_show(fig, save_path)
+    _save_or_show(fig, save_path, show=True)
 
 
-def plot_reconstructions(  # NEW ADDITION
+def plot_reconstructions(
     model,
     clean_ds,
     corrupt_ds,
@@ -82,7 +84,7 @@ def plot_reconstructions(  # NEW ADDITION
     _save_or_show(fig, save_path)
 
 
-def plot_loss_curves(  # NEW ADDITION
+def plot_loss_curves(
     history: dict,
     title: str = "Loss Curves",
     save_path: str | Path | None = None,
@@ -99,7 +101,7 @@ def plot_loss_curves(  # NEW ADDITION
     _save_or_show(fig, save_path)
 
 
-def plot_loss_comparison(  # NEW ADDITION
+def plot_loss_comparison( 
     mse_history: dict,
     ssim_history: dict,
     save_path: str | Path | None = None,
@@ -116,7 +118,7 @@ def plot_loss_comparison(  # NEW ADDITION
     _save_or_show(fig, save_path)
 
 
-def plot_error_distribution(  # NEW ADDITION
+def plot_error_distribution(
     errors_clean: Iterable[float],
     errors_corrupt: Iterable[float],
     threshold: float | None = None,
@@ -131,10 +133,10 @@ def plot_error_distribution(  # NEW ADDITION
     ax.set_xlabel("Reconstruction Error")
     ax.set_ylabel("Count")
     ax.legend()
-    _save_or_show(fig, save_path)
+    _save_or_show(fig, save_path, show=True)
 
 
-def plot_confusion_matrix(  # NEW ADDITION
+def plot_confusion_matrix(
     cm: np.ndarray,
     labels=("Clean", "Corrupted"),
     save_path: str | Path | None = None,
@@ -150,4 +152,4 @@ def plot_confusion_matrix(  # NEW ADDITION
         for j in range(cm.shape[1]):
             ax.text(j, i, str(cm[i, j]), ha="center", va="center")
     fig.colorbar(im, ax=ax)
-    _save_or_show(fig, save_path)
+    _save_or_show(fig, save_path, show=True)

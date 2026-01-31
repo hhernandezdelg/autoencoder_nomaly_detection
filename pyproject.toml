@@ -16,9 +16,6 @@ dependencies = [
   "ipython",  # only needed because your code imports IPython.display
 ]
 
-[tool.uv]
-index-strategy = "unsafe-first-match"
-
 [dependency-groups]
 dev = [
     "black>=25.12.0",
