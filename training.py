@@ -10,7 +10,7 @@ from torch import nn
 from tqdm.auto import tqdm
 
 
-def _ensure_4d(x: torch.Tensor) -> torch.Tensor:  # NEW ADDITION
+def _ensure_4d(x: torch.Tensor) -> torch.Tensor:
     if x.dim() == 2:
         side = int(x.shape[1] ** 0.5)
         return x.view(x.size(0), 1, side, side)
